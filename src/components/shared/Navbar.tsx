@@ -2,15 +2,19 @@
 
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+
 type NavbarProps = {
   user?: {
-    name?: string | null ;
-    email?: string | null ;
-    image?: string | null ;
-  }
-}
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
+};
 
-const Navbar = ({session}: {session: NavbarProps | null}) => {
+const Navbar = ({ session }: { session: NavbarProps | null }) => {
+  // i can not use getServerSession() because navbar is a client section.
+  // so here server function is not worked. i need to use getServerSession() in root layout.tsx,
+  // cause navbar is imported there. i use getServerSession() by a session variable and send to navbar as a props
   return (
     <div className="w-[90%] mx-auto flex items-center justify-between bg-white border-b py-4">
       <div className="flex items-center">
@@ -75,20 +79,27 @@ const Navbar = ({session}: {session: NavbarProps | null}) => {
         </ul>
       </div>
 
+      {/* login/logout condition */}
       <div className="flex items-center">
-        {session?.user ?
-        (<button onClick={() => signOut({
-          callbackUrl: "http://localhost:3000/login"
-        })} className="border border-red-500 text-red-500 px-5 py-2 rounded-full hover:bg-red-500 hover:text-black transition duration-200">
-          Logout
-        </button>)
-        :
-        (<Link
-          href="/login"
-          className="border border-teal-500 text-teal-500 px-5 py-2 rounded-full hover:bg-teal-500 hover:text-black transition duration-200"
-        >
-          Login
-        </Link>)}
+        {session?.user ? (
+          <button
+            onClick={() => 
+              signOut({
+                callbackUrl: "http://localhost:3000/login",
+              })
+            }
+            className="border border-red-500 text-red-500 px-5 py-2 rounded-full hover:bg-red-500 hover:text-black transition duration-200"
+          >
+            Logout
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="border border-teal-500 text-teal-500 px-5 py-2 rounded-full hover:bg-teal-500 hover:text-black transition duration-200"
+          >
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );
