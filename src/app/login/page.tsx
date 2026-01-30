@@ -21,16 +21,15 @@ const LoginPage = () => {
 
   const router = useRouter();
 
-
   const onSubmit = async (data: FormValues) => {
     // console.log(data);
     try {
       const res = await loginUser(data);
       const { message, accessToken } = res;
       if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem("accessToken", accessToken);
         alert(message);
-        router.push('/');
+        router.push("/");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -114,10 +113,16 @@ const LoginPage = () => {
 
           {/* Social Login Buttons */}
           <div className="flex justify-center gap-4 mt-4">
-            <button className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full shadow-md hover:bg-gray-200"
-              onClick={() => signIn("google", {
-                callbackUrl: "https://nextjs-authentication-explore.vercel.app/dashboard"
-              })}>
+            {/* google */}
+            <button
+              className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full shadow-md hover:bg-gray-200"
+              onClick={() =>
+                // google
+                signIn("google", {
+                  callbackUrl: "http://localhost:3000/dashboard",
+                })
+              }
+            >
               <Image
                 src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png"
                 width={30}
@@ -125,10 +130,16 @@ const LoginPage = () => {
                 alt="Google logo"
               />
             </button>
-            <button className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full shadow-md hover:bg-gray-200"
-              onClick={() => signIn("github", {
-                callbackUrl: "https://nextjs-authentication-explore.vercel.app/dashboard"
-              })}>
+
+            {/* github */}
+            <button
+              className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full shadow-md hover:bg-gray-200"
+              onClick={() =>
+                signIn("github", {
+                  callbackUrl: "http://localhost:3000/dashboard",
+                })
+              }
+            >
               <Image
                 src="https://cdn-icons-png.flaticon.com/512/25/25231.png"
                 width={25}
