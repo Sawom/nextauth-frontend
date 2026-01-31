@@ -1,5 +1,4 @@
 "use client";
-import { loginUser } from "@/utils/actions/loginUser";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,19 +29,22 @@ const LoginPage = () => {
   const router = useRouter();
 
   const onSubmit = async (data: FormValues) => {
-    // console.log(data);
     try {
-      const res = await loginUser(data);
-      console.log("Server Payload:", res);
-      // const { message, accessToken } = res;
-      if (res && res.accessToken) {
-        localStorage.setItem("accessToken", res.accessToken);
-        alert(res.message);
-        router.push("/");
+      // 1. NextAuth-er signIn called by "credentials" diye
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false, //for manually error handling
+      });
+
+      if (result?.error) {
+        alert("Login Failed: " + result.error);
       } else {
-        alert(res.message || "Invalid Login!");
+        alert("Logged in successfully!");
+        // 2. Refresh/Redirect: IMPORTANT!
+        // for Server-side session sync
+        window.location.href = "/";
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(err.message);
       throw new Error(err.message);
