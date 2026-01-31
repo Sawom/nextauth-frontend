@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 export type UserData = {
   username: string;
   email: string;
-  password: string;
+  password?: string;
 };
 
 const RegisterPage = () => {
@@ -29,11 +29,11 @@ const RegisterPage = () => {
     try {
       const res = await registerUser(data);
       const { success, message } = res;
-      if(success){
+      if (success) {
         alert(message);
-        router.push('/login')
+        router.push("/login");
       }
-      } catch (err: any) {
+    } catch (err: any) {
       console.error(err.message);
       throw new Error(err.message);
     }
