@@ -52,6 +52,9 @@ const Navbar = ({ session }: { session: NavbarProps | null }) => {
             <li className="py-2 px-4 hover:bg-gray-100">
               <Link href="/support">Support</Link>
             </li>
+            <li className="py-2 px-4 hover:bg-gray-100">
+              <Link href="/dashboard">Dashboard</Link>
+            </li>
           </ul>
         </div>
         <Link
@@ -83,7 +86,7 @@ const Navbar = ({ session }: { session: NavbarProps | null }) => {
       <div className="flex items-center">
         {session?.user ? (
           <button
-            onClick={() => 
+            onClick={() =>
               signOut({
                 callbackUrl: "http://localhost:3000/login",
               })
