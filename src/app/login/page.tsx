@@ -25,11 +25,14 @@ const LoginPage = () => {
     // console.log(data);
     try {
       const res = await loginUser(data);
-      const { message, accessToken } = res;
-      if (accessToken) {
-        localStorage.setItem("accessToken", accessToken);
-        alert(message);
+      console.log("Server Payload:", res);
+      // const { message, accessToken } = res;
+      if (res && res.accessToken) {
+        localStorage.setItem("accessToken", res.accessToken);
+        alert(res.message);
         router.push("/");
+      } else {
+        alert(res.message || "Invalid Login!");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
