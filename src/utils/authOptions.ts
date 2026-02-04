@@ -14,16 +14,19 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // loginUser logic 
-        const res = await fetch(`${process.env.BACKEND_URL}/login`, {
-          method: "POST",
-          body: JSON.stringify(credentials),
-          headers: { "Content-Type": "application/json" },
-        });
+        // loginUser logic
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/login`,
+          {
+            method: "POST",
+            body: JSON.stringify(credentials),
+            headers: { "Content-Type": "application/json" },
+          },
+        );
 
         const user = await res.json();
 
-        // if login  success  (accessToken found), then return user object 
+        // if login  success  (accessToken found), then return user object
         if (res.ok && user) {
           return user; //  session?.user. this is the login session
         }
@@ -49,15 +52,18 @@ export const authOptions: NextAuthOptions = {
 
       if (account?.provider === "google" || account?.provider === "github") {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/register`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              username: user.name,
-              email: user.email,
-              provider: account?.provider,
-            }),
-          });
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/register`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                username: user.name,
+                email: user.email,
+                provider: account?.provider,
+              }),
+            },
+          );
           return response.ok;
         } catch (error) {
           return false;
@@ -65,7 +71,7 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
-    // 2. Second: user data pass to Session- for navbar 
+    // 2. Second: user data pass to Session- for navbar
     async jwt({ token, user }) {
       if (user) token.user = user;
       return token;
