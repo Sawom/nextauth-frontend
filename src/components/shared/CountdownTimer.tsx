@@ -1,19 +1,31 @@
 "use client";
 import { useEffect, useState } from "react";
 
-const CountdownTimer = () => {
-  // 10mins = 600 seconds 
+interface CountdownTimerProps {
+  initialSeconds: number;
+  onExpire: () => void;
+}
+
+const CountdownTimer = ({ initialSeconds, onExpire }: CountdownTimerProps) => {
+  // 10mins = 600 seconds
   const [timeLeft, setTimeLeft] = useState(600);
 
   useEffect(() => {
-    if (timeLeft <= 0) return;
+    setTimeLeft(initialSeconds); // state update as backend time
+  }, [initialSeconds]); // if initialSeconds is changed thentimer will updated
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      onExpire();
+      return;
+    }
 
     const timerId = setInterval(() => {
       setTimeLeft((prev) => prev - 1);
     }, 1000);
 
-    return () => clearInterval(timerId); // for avoiding memory  lick
-  }, [timeLeft]);
+    return () => clearInterval(timerId);
+  }, [timeLeft, onExpire]);
 
   // time format (MM:SS)
   const formatTime = (seconds: number) => {

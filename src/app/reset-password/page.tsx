@@ -2,17 +2,19 @@
 
 import CountdownTimer from "@/components/shared/CountdownTimer";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 
 const ResetPasswordPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
-  //   token taken from url
   const token = searchParams.get("token");
+
+  const [initialTime, setInitialTime] = useState<number | null>(null);
+  const [isExpired, setIsExpired] = useState(false);
+  const [fetchingTime, setFetchingTime] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -21,9 +23,56 @@ const ResetPasswordPage = () => {
     formState: { errors },
   } = useForm();
 
+  //   get real time  from database
+
+  useEffect(() => {
+    if (token) {
+      setFetchingTime(true);
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reset-token-status/${token}`,
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.timeLeft > 0) {
+            setInitialTime(data.timeLeft);
+            setIsExpired(false);
+          } else {
+            setIsExpired(true);
+          }
+        })
+        .catch(() => setIsExpired(true))
+        .finally(() => setFetchingTime(false));
+    }
+  }, [token]);
+
+  // if data is loaded
+  if (fetchingTime) {
+    return <div className="text-center my-20">Checking token validity...</div>;
+  }
+
+  // 2. if data is expired or not
+  if (isExpired) {
+    return (
+      <div className="text-center my-20">
+        <h2 className="text-2xl text-red-500 font-bold">Link Expired!</h2>
+        <p>This password reset link is no longer valid.</p>
+        <button
+          onClick={() => (window.location.href = "/forget-password")}
+          className="mt-4 text-teal-600 underline"
+        >
+          Request a new link
+        </button>
+      </div>
+    );
+  }
+
   const onSubmit = async (data: any) => {
     if (!token) {
-      Swal.fire("Error", "Token is missing!", "error");
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Request",
+        text: "No token found. Please use the link sent to your email.",
+      });
       return;
     }
 
@@ -44,13 +93,28 @@ const ResetPasswordPage = () => {
       const result = await response.json();
 
       if (result.success) {
-        Swal.fire("Success", "Password updated successfully!", "success");
-        router.push("/login"); // if password changed then redirect to login
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Your password has been updated. You can now login.",
+          confirmButtonColor: "#14b8a6",
+        }).then(() => {
+          router.push("/login");
+        });
       } else {
-        Swal.fire("Error", result.message, "error");
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: result.message || "Failed to update password.",
+        });
       }
     } catch (error) {
-      Swal.fire("Error", "Failed to connect to server", "error");
+      console.error("Update error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Connection Error",
+        text: "Could not connect to the server.",
+      });
     } finally {
       setLoading(false);
     }
@@ -65,6 +129,14 @@ const ResetPasswordPage = () => {
         <p className="text-sm text-center text-gray-500">
           Enter your new secure password below.
         </p>
+
+        {/* <CountdownTimer></CountdownTimer> */}
+        {initialTime !== null && (
+          <CountdownTimer
+            initialSeconds={initialTime}
+            onExpire={() => setIsExpired(true)}
+          />
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
@@ -109,16 +181,30 @@ const ResetPasswordPage = () => {
 
           <button
             type="submit"
-            disabled={loading}
-            className={`w-full py-2 font-bold text-white rounded-md ${loading ? "bg-gray-400" : "bg-teal-500 hover:bg-teal-600"}`}
+            disabled={loading || isExpired} // if time expired then button is disabled
+            className={`w-full py-2 font-bold text-white rounded-md ${
+              loading || isExpired
+                ? "bg-gray-400"
+                : "bg-teal-500 hover:bg-teal-600"
+            }`}
           >
-            {loading ? "Updating..." : "Update Password"}
+            {loading
+              ? "Updating..."
+              : isExpired
+                ? "Link Expired"
+                : "Update Password"}
           </button>
         </form>
-        <CountdownTimer></CountdownTimer>
       </div>
     </div>
   );
 };
 
-export default ResetPasswordPage;
+// if useSearchParams() is used then  it should be wrapped with
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading Page...</div>}>
+      <ResetPasswordPage />
+    </Suspense>
+  );
+}
