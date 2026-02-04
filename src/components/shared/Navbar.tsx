@@ -46,12 +46,7 @@ const Navbar = ({ session }: { session: NavbarProps | null }) => {
             <li className="py-2 px-4 hover:bg-gray-100">
               <Link href="/">Home</Link>
             </li>
-            <li className="py-2 px-4 hover:bg-gray-100">
-              <Link href="/about">About Us</Link>
-            </li>
-            <li className="py-2 px-4 hover:bg-gray-100">
-              <Link href="/support">Support</Link>
-            </li>
+
             <li className="py-2 px-4 hover:bg-gray-100">
               <Link href="/dashboard">Dashboard</Link>
             </li>
