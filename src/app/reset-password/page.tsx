@@ -1,5 +1,6 @@
 "use client";
 
+import CountdownTimer from "@/components/shared/CountdownTimer";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -114,6 +115,7 @@ const ResetPasswordPage = () => {
             {loading ? "Updating..." : "Update Password"}
           </button>
         </form>
+        <CountdownTimer></CountdownTimer>
       </div>
     </div>
   );
