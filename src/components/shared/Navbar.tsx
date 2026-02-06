@@ -65,12 +65,12 @@ const Navbar = ({ session }: { session: NavbarProps | null }) => {
           <li className="hover:text-gray-600">
             <Link href="/">Home</Link>
           </li>
-          <li className="hover:text-gray-600">
+          {/* <li className="hover:text-gray-600">
             <Link href="/about">About Us</Link>
           </li>
           <li className="hover:text-gray-600">
             <Link href="/support">Support</Link>
-          </li>
+          </li> */}
           <li className="hover:text-gray-600">
             <Link href="/dashboard">Dashboard</Link>
           </li>
@@ -79,6 +79,7 @@ const Navbar = ({ session }: { session: NavbarProps | null }) => {
 
       {/* login/logout condition */}
       <div className="flex items-center">
+        {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
         {session?.user ? (
           <button
             onClick={() =>

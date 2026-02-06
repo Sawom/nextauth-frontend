@@ -37,6 +37,11 @@ const LoginPage = () => {
         redirect: false, //for manually error handling
       });
 
+      if (result?.ok) {
+        router.push("/dashboard");
+        router.refresh();
+      }
+
       if (result?.error) {
         Swal.fire({
           icon: "error",
@@ -50,7 +55,7 @@ const LoginPage = () => {
           text: "Logged in successfully!",
           confirmButtonColor: "#14b8a6",
         }).then(() => {
-          router.push("/");
+          router.push("/dashboard");
         });
         // 2. Refresh/Redirect: IMPORTANT!
       }

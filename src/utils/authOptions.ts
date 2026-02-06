@@ -44,6 +44,9 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_SECRET as string,
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "credentials") {
