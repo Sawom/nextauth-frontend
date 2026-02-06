@@ -24,11 +24,11 @@ export const authOptions: NextAuthOptions = {
           },
         );
 
-        const user = await res.json();
+        const data = await res.json();
 
-        // if login  success  (accessToken found), then return user object
-        if (res.ok && user) {
-          return user; //  session?.user. this is the login session
+        // if login  success  (accessToken found), then return data.user
+        if (res.ok && data.success && data.user) {
+          return data.user;
         }
         return null;
       },

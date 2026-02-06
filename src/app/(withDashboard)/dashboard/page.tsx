@@ -20,7 +20,9 @@ const DashboardPage = async () => {
     dbUser = data;
   }
 
-  console.log(dbUser);
+  // console.log(dbUser);
+  console.log("Email from session:", session?.user?.email);
+  console.log("Full Session Object:", session);
 
   return (
     <div>
