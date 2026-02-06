@@ -30,7 +30,7 @@ const LoginPage = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      // 1. NextAuth-er signIn called by "credentials" diye
+      // 1. NextAuth-er signIn called by "credentials"
       const result = await signIn("credentials", {
         email: data.email,
         password: data.password,
