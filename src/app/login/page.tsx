@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 export type FormValues = {
   email: string;
@@ -37,12 +38,21 @@ const LoginPage = () => {
       });
 
       if (result?.error) {
-        alert("Login Failed: " + result.error);
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: "Wrong Password!",
+        });
       } else {
-        alert("Logged in successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Logged in successfully!",
+          confirmButtonColor: "#14b8a6",
+        }).then(() => {
+          router.push("/");
+        });
         // 2. Refresh/Redirect: IMPORTANT!
-        // for Server-side session sync
-        window.location.href = "/";
       }
     } catch (err: any) {
       console.error(err.message);
