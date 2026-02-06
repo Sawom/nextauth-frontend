@@ -103,6 +103,7 @@ const LoginPage = () => {
                   className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm  sm:text-sm"
                   required
                 />
+
                 {/* eye button */}
                 <button
                   type="button"
@@ -170,7 +171,10 @@ const LoginPage = () => {
 
           <p className="text-center mt-4 text-sm text-gray-600">
             Forgot Password?
-            <Link href="/forget-password" className="text-teal-500 hover:underline">
+            <Link
+              href="/forget-password"
+              className="text-teal-500 hover:underline"
+            >
               Reset Password
             </Link>
           </p>
