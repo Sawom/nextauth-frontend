@@ -60,6 +60,7 @@ export const authOptions: NextAuthOptions = {
               body: JSON.stringify({
                 username: user.name,
                 email: user.email,
+                image: user.image,
                 provider: account?.provider,
               }),
             },
@@ -73,12 +74,24 @@ export const authOptions: NextAuthOptions = {
     },
     // 2. Second: user data pass to Session- for navbar
     async jwt({ token, user }) {
-      if (user) token.user = user;
+      if (user) {
+        // we set user object in token
+        token.email = user.email;
+        token.name = user.name;
+        token.picture = (user as any).image;
+        token.role = (user as any).role;
+      }
       return token;
     },
 
     async session({ session, token }) {
-      session.user = token.user as any;
+      // data is send from token to session
+      if (session.user) {
+        session.user.email = token.email;
+        session.user.name = token.name;
+        session.user.image = token.picture as string;
+        (session.user as any).role = token.role;
+      }
       return session;
     },
   },

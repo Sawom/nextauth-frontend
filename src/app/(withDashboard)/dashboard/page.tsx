@@ -10,7 +10,7 @@ const DashboardPage = async () => {
 
   if (userEmail) {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userEmail}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/registers/${userEmail}`,
       {
         cache: "no-store", // if I want to get real time data then it should better to cache off
       },
